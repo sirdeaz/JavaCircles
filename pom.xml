@@ -16,8 +16,8 @@
     </properties>
 
     <dependencies>
-    <!--  Downloaded at:   -->
-    <!-- Manually installed by using:  -->
+    <!--  Downloaded at: http://java.net/projects/timingframework/downloads  -->
+    <!-- Manually installed by using: mvn install:install-file -DgroupId=com.timingframework -DartifactId=timingframework-spring -Dpackaging=jar -Dversion=3.0 -Dtimingframework-swing-3.0.jar -DgeneratePom=true -->
         <dependency>
             <groupId>com.timingframework</groupId>
             <artifactId>timingframework-spring</artifactId>
