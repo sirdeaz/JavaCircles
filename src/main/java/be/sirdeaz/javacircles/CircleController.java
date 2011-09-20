@@ -4,13 +4,12 @@
  */
 package be.sirdeaz.javacircles;
 
-import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.TimeUnit;
+
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.Animator.Direction;
-import org.jdesktop.core.animation.timing.AnimatorBuilder;
 import org.jdesktop.core.animation.timing.interpolators.AccelerationInterpolator;
 
 /**
@@ -28,8 +27,8 @@ public class CircleController implements PropertyChangeListener {
         this.circleCanvas.addPropertyChangeListener(this);
         this.circleCanvas.getModel().addPropertyChangeListener(this);
 
-        movingCircleAnimator = new AnimatorBuilder(CircleManager.getInstance().getTimingSource()).addTarget(new SmallCircleAdapter(circleCanvas.getModel())).setDuration(500, TimeUnit.MILLISECONDS).setInterpolator(new AccelerationInterpolator(0.5, 0.5)).build();
-        circleSizeAnimator = new AnimatorBuilder(CircleManager.getInstance().getTimingSource()).addTarget(new CirclePanelFocusAdapter(this.circleCanvas)).setDuration(300, TimeUnit.MILLISECONDS).setInterpolator(new AccelerationInterpolator(0.2, 0.3)).build();
+        movingCircleAnimator = new Animator.Builder(CircleManager.getInstance().getTimingSource()).addTarget(new SmallCircleAdapter(circleCanvas.getModel())).setDuration(500, TimeUnit.MILLISECONDS).setInterpolator(new AccelerationInterpolator(0.5, 0.5)).build();
+        circleSizeAnimator = new Animator.Builder(CircleManager.getInstance().getTimingSource()).addTarget(new CirclePanelFocusAdapter(this.circleCanvas)).setDuration(300, TimeUnit.MILLISECONDS).setInterpolator(new AccelerationInterpolator(0.2, 0.3)).build();
     }
 
     // @Override

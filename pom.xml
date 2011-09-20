@@ -1,4 +1,3 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -17,11 +16,11 @@
 
     <dependencies>
     <!--  Downloaded at: http://java.net/projects/timingframework/downloads  -->
-    <!-- Manually installed by using: mvn install:install-file -DgroupId=com.timingframework -DartifactId=timingframework-spring -Dpackaging=jar -Dversion=3.0 -Dtimingframework-swing-3.0.jar -DgeneratePom=true -->
+    <!-- Manually installed by using: mvn install:install-file -DgroupId=net.java.timingframework -DartifactId=spring-timingframework -Dversion=4.1 -Dpackaging=jar -Dfile=timingframework-swing-4.1.jar  -->
         <dependency>
-            <groupId>com.timingframework</groupId>
-            <artifactId>timingframework-spring</artifactId>
-            <version>3.0</version>
+            <groupId>net.java.timingframework</groupId>
+            <artifactId>spring-timingframework</artifactId>
+            <version>4.1</version>
         </dependency>
         
         <dependency>

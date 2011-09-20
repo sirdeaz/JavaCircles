@@ -39,9 +39,9 @@ public class JavaBasicApp {
 		JFrame frame = new JFrame("JavaBasicApp");
 		final CircleModel model = new CircleModel();
 		final CircleController c1 = CircleManager.getInstance()
-				.createNewCircleController("#####left#####", model);
+				.createNewCircleController("###left###", model);
 		CircleController c2 = CircleManager.getInstance()
-				.createNewCircleController("####right####");
+				.createNewCircleController("###right###");
 
 		JPanel centerPanel = new JPanel(new FlowLayout());
 		centerPanel.add(c1.getCircleCanvas());
