@@ -38,5 +38,11 @@ public class TestCircle implements Circle {
     public String getText() {
         return "100";
     }
+
+	@Override
+	public Color getOutlineColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

@@ -16,6 +16,7 @@ public interface Circle {
     int getId();
     
     Color getColor();
+    Color getOutlineColor();
     
     void setDegrees(int degrees);
     int getDegrees();

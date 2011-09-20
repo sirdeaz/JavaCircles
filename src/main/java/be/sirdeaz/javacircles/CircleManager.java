@@ -24,12 +24,11 @@ public class CircleManager implements GhostDropListener {
     private final List<DropListener> dropListeners = new ArrayList<DropListener>();
     private TimingSource ts;
 
-    
     private CircleManager() {
         glassPane = new MyGlassPane();
         ToolTipManager.sharedInstance().setInitialDelay(0);
     }
-    
+
     public TimingSource getTimingSource() {
         if (ts == null) {
             ts = new SwingTimerTimingSource();
@@ -54,40 +53,37 @@ public class CircleManager implements GhostDropListener {
         this.dropListeners.remove(listener);
     }
 
-     public CircleController createNewCircleController(String title, CircleModel model, InnerCircleLabelGenerator generator) {
-        CircleCanvas c = new CircleCanvas(title, model, generator);
-        c.addFocusListener(null);
-
-        CircleComponentAdapter cca = new CircleComponentAdapter(c, glassPane, title);
+    private CircleController createNewCircleController(CircleCanvas c) {
+        CircleComponentAdapter cca = new CircleComponentAdapter(c, glassPane, c.getTitle());
         cca.addGhostDropListener(CircleManager.getInstance());
         c.addMouseListener(cca);
         c.addMouseMotionListener(cca);
 
         CircleController controller = new CircleController(c);
         // force an update on the model
-        model.fireCircleAdded();
+        c.getModel().fireCircleAdded();
         return controller;
     }
-     
-    public CircleController createNewCircleController(String title, CircleModel model) {
-        CircleCanvas c = new CircleCanvas(title, model);
-        c.addFocusListener(null);
 
-        CircleComponentAdapter cca = new CircleComponentAdapter(c, glassPane, title);
-        cca.addGhostDropListener(CircleManager.getInstance());
-        c.addMouseListener(cca);
-        c.addMouseMotionListener(cca);
-
-        CircleController controller = new CircleController(c);
-        // force an update on the model
-        model.fireCircleAdded();
-        return controller;
+    public CircleController createNewCircleController(String title, CircleModel circleModel, InnerCircleLabelGenerator innerCircleLabelGenerator, InnerCircleColorGenerator innerCircleColorGenerator) {
+        CircleCanvas c = new CircleCanvas(title, circleModel);
+        if (innerCircleColorGenerator != null) {
+            c.setInnerCircleColorGenerator(innerCircleColorGenerator);
+        }
+        if (innerCircleLabelGenerator != null) {
+            c.setInnerCircleLabelGenerator(innerCircleLabelGenerator);
+        }
+        return createNewCircleController(c);
     }
-    
-    
+
+    public CircleController createNewCircleController(String title, CircleModel circleModel) {
+        CircleCanvas c = new CircleCanvas(title, circleModel);
+        return createNewCircleController(c);
+    }
 
     public CircleController createNewCircleController(String title) {
-        return createNewCircleController(title, new CircleModel());
+        CircleCanvas c = new CircleCanvas(title, new CircleModel());
+        return createNewCircleController(c);
     }
 
     @Override
@@ -97,8 +93,7 @@ public class CircleManager implements GhostDropListener {
         Circle circle = ((CircleGhostDropEvent) e).getCircle();
         if (e.getTarget() == null) {
             doMoveWithoutTarget(circle, e);
-        }
-        else if (e instanceof CircleGhostDropEvent
+        } else if (e instanceof CircleGhostDropEvent
                 && e.getTarget() instanceof CircleCanvas
                 && e.getSource() instanceof CircleCanvas) {
             // only initiate a move when the source and target differ

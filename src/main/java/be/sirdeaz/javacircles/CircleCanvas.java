@@ -19,6 +19,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.RadialGradientPaint;
 import java.awt.Rectangle;
@@ -46,11 +47,14 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     // old values - only small change if canvas receives focus
     // public static final int OUTER_CIRCLE_MAX_EXTEND = 20;
     // public static final int OUTER_CIRCLE = 235;
-    public static final int OUTER_CIRCLE_MAX_EXTEND = 110;
-    public static final int OUTER_CIRCLE = 125;
-    private static final int SMALL_CIRCLE = 50;
-    private static final int INNER_CIRCLE = 125;
+    public static final int OUTER_CIRCLE_MAX_EXTEND = 90;
+    public static final int OUTER_CIRCLE = 100;
+    private static final int SMALL_CIRCLE = 35;
+    private static final int INNER_CIRCLE = 100;
     private static final int START_ANGLE = 270;
+    
+    private static final int CANVAS_WIDTH = 200;
+    
     // properties
     public static final String PROP_FOCUS_RECEIVED = "CIRCLE_CANVAS_FOCUS_RECEIVED";
     public static final String PROP_FOCUS_LOST = "CIRCLE_CANVAS_FOCUS_LOST";
@@ -61,16 +65,14 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     private final String title;
     private int outerCircleRadius;
     private final Font myFont = new Font("verdana", Font.BOLD, 12);
-
+    
     private InnerCircleLabelGenerator innerCircleLabelGenerator;
-    private Color innerCircleColor;
-    
-    
-    
+    private InnerCircleColorGenerator innerCircleColorGenerator = new DefaultInnerCircleColorGenerator();
+
     public CircleCanvas(String title, CircleModel model) {
         this(title, model, new DefaultInnerCircleLabelGenerator());
     }
-    
+
     public CircleCanvas(String title, CircleModel model, InnerCircleLabelGenerator innerCircleLabelGenerator) {
         initComponents();
         setOpaque(true);
@@ -79,14 +81,33 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
         this.title = title;
         this.innerCircleLabelGenerator = innerCircleLabelGenerator;
         this.outerCircleRadius = OUTER_CIRCLE;
-        this.innerCircleColor = ColorSetup.getInstance().getInnerCircleColor();
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(250, 250);
+        return new Dimension(CANVAS_WIDTH, CANVAS_WIDTH);
     }
-    
+
+    @Override
+    public int getWidth() {
+        return CANVAS_WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return CANVAS_WIDTH;
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return getPreferredSize();
+    }
+
+    @Override
+    public Dimension getSize() {
+        return getPreferredSize();
+    }
+
     public InnerCircleLabelGenerator getInnerCircleLabelGenerator() {
         return innerCircleLabelGenerator;
     }
@@ -95,12 +116,12 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
         this.innerCircleLabelGenerator = innerCircleLabelGenerator;
     }
 
-    public void setInnerCircleColor(Color innerCircleColor) {
-        this.innerCircleColor = innerCircleColor;
+    public InnerCircleColorGenerator getInnerCircleColorGenerator() {
+        return innerCircleColorGenerator;
     }
 
-    public Color getInnerCircleColor() {
-        return innerCircleColor;
+    public void setInnerCircleColorGenerator(InnerCircleColorGenerator innerCircleColorGenerator) {
+        this.innerCircleColorGenerator = innerCircleColorGenerator;
     }
     
     public static int getStartAngle() {
@@ -186,9 +207,7 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
 
     /**
      * Draws the circles. Soft clipping hack used:
-     * http://weblogs.java.net/blog/campbell
-     * /archive/2006/07/java_2d_tricker.html
-     * 
+     * http://weblogs.java.net/blog/campbell/archive/2006/07/java_2d_tricker.html
      * @param g
      */
     @Override
@@ -203,7 +222,10 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
         BufferedImage img = gc.createCompatibleImage(getWidth(), getHeight(),
                 Transparency.TRANSLUCENT);
         Graphics2D g2 = img.createGraphics();
-
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         // Clear the image so all pixels have zero alpha
         g2.setComposite(AlphaComposite.Clear);
         g2.fillRect(0, 0, getWidth(), getHeight());
@@ -213,8 +235,6 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
         // commenting out the line that enables antialiasing, and
         // you will see that you end up with the usual hard clipping.
         g2.setComposite(AlphaComposite.Src);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.WHITE);
         g2.fill(getOuterCircleShape(0));
 
@@ -228,20 +248,6 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
         // effect.
         g2.setComposite(AlphaComposite.SrcAtop);
 
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-        // MultipleGradientPaint outerGradientPaint =
-        // new RadialGradientPaint(new Point2D.Double(getWidth() / 2,
-        // getHeight() / 2),
-        // outerCircleRadius,
-        // new float[]{0.0f, 1.0f},
-        // new Color[]{Color.darkGray, Color.white});
-        // //new Color[]{ColorSetup.getInstance().getOuterCircleColor(),
-        // // new Color(0, 0, 0, 0)});
-
         Point2D center = new Point2D.Float(getWidth() / 2, getWidth() / 2);
         RadialGradientPaint outerGradientPaint = new RadialGradientPaint(
                 center, outerCircleRadius, new float[]{0.0f, 1.0f},
@@ -251,7 +257,7 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
 
         RadialGradientPaint innerCircleGradient = new RadialGradientPaint(
                 center, INNER_CIRCLE, new float[]{0.0f, 1.0f},
-                new Color[]{this.innerCircleColor, Color.DARK_GRAY});
+                new Color[]{this.innerCircleColorGenerator.getColor(this), Color.DARK_GRAY});
 
         g2.setPaint(innerCircleGradient);
         drawCircle(g2, INNER_CIRCLE, INNER_CIRCLE, getTitle());
@@ -268,9 +274,9 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
         drawCircle(g2, width, height);
         drawInnerCircleText(g2, width, height, this.innerCircleLabelGenerator.generateLabel(this));
     }
-    
+
     public void drawInnerCircleText(Graphics2D g2, int width, int height, String text) {
-        int y = (getHeight() / 2) - (getInnerCircleLabelHeight(g2, text)/4);
+        int y = (getHeight() / 2) - (getInnerCircleLabelHeight(g2, text) / 4);
         FontMetrics m = getFontMetrics(this.myFont);
         g2.setFont(myFont);
         g2.setPaint(Color.black);
@@ -281,7 +287,7 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
             y += textRect.getHeight();
         }
     }
-    
+
     /**
      * Calculates the total height of the provided text. 
      * Newline chars will create additional lines.
@@ -296,7 +302,7 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
             Rectangle2D textRect = m.getStringBounds(entry, g2);
             height += textRect.getHeight();
         }
-        
+
         return height;
     }
 
@@ -315,6 +321,12 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
             Shape s = getTransformedShape(circle);
             g2.setPaint(circle.getColor());
             g2.fill(s);
+
+            // draw an outline if an outline color is set.
+            if (circle.getOutlineColor() != null) {
+                g2.setColor(circle.getOutlineColor());
+                g2.draw(s);
+            }
 
             Rectangle shapeRect = s.getBounds();
             String text = "" + circle.getText();
