@@ -21,7 +21,7 @@ public class CircleManager implements GhostDropListener {
 
     private static final CircleManager INSTANCE = new CircleManager();
     private final MyGlassPane glassPane;
-    private final List<DropListener> dropListeners = new ArrayList<DropListener>();
+    private final List<DropListener<Circle>> dropListeners = new ArrayList<DropListener<Circle>>();
     private TimingSource ts;
 
     private CircleManager() {
