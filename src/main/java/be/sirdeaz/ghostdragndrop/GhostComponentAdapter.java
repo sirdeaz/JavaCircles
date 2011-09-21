@@ -6,10 +6,9 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
 
+import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 public class GhostComponentAdapter extends GhostDropAdapter

@@ -4,19 +4,13 @@
  */
 package be.sirdeaz.javacircles;
 
-import be.sirdeaz.javacircles.Circle;
-import be.sirdeaz.javacircles.CircleController;
-import be.sirdeaz.javacircles.CircleManager;
-import be.sirdeaz.javacircles.CircleModel;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.Calendar;
 import java.util.Random;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;

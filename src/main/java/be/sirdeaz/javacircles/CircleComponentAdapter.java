@@ -145,8 +145,6 @@ class CircleComponentAdapter extends GhostDropAdapter {
     public void mouseMoved(MouseEvent e) {
         updateFocusedComponents(e);
 
-        Component c = e.getComponent();
-
         Point p = (Point) e.getPoint().clone();
 
         Circle circle = this.circleCanvas.getSelectedCircle(p);
