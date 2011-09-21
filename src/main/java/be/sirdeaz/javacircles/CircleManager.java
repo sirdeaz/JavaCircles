@@ -45,11 +45,11 @@ public class CircleManager implements GhostDropListener {
         return INSTANCE;
     }
 
-    public synchronized void addDropListener(DropListener listener) {
+    public synchronized void addDropListener(DropListener<Circle> listener) {
         this.dropListeners.add(listener);
     }
 
-    public synchronized void removeDropListener(DropListener listener) {
+    public synchronized void removeDropListener(DropListener<Circle> listener) {
         this.dropListeners.remove(listener);
     }
 
