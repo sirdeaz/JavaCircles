@@ -40,12 +40,12 @@ import be.sirdeaz.ghostdragndrop.GhostGlassPane;
             case ADD:
                 g2.setPaint(Color.green);
                 //g2.fillOval(x+width, y-25, width, height);
-                g2.drawImage(addImage, x+width-5, y+height/2, addImage.getWidth(null), addImage.getHeight(null), null);
+                g2.drawImage(addImage, x+width-2, y+height/+2, addImage.getWidth(null), addImage.getHeight(null), null);
                 break;
             case REMOVE:
                 g2.setPaint(Color.red);
                 //g2.fillOval(x+width, y-25, width, height);
-                g2.drawImage(deleteImage, x+width-5, y+height/2, deleteImage.getWidth(null), deleteImage.getHeight(null), null);
+                g2.drawImage(deleteImage, x+width-2, y+height/2+2, deleteImage.getWidth(null), deleteImage.getHeight(null), null);
                 break;
         }
     }
