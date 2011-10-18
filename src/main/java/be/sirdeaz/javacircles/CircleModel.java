@@ -49,6 +49,14 @@ public class CircleModel {
         return taskCircles.size();
     }
 
+    public boolean retainAll(List<Circle> circles) {
+        boolean changed = taskCircles.retainAll(circles);
+        if (changed) {
+            fireCircleRemoved();
+        }
+        return changed;
+    }
+    
     public Circle getCircleAt(int i) {
         if (i >= taskCircles.size()) {
             throw new IllegalArgumentException("index cannot be higher than " + taskCircles.size());

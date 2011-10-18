@@ -21,7 +21,7 @@ public class CircleManager implements GhostDropListener {
 
     private static final CircleManager INSTANCE = new CircleManager();
     private final MyGlassPane glassPane;
-    private final List<DropListener<Circle>> dropListeners = new ArrayList<DropListener<Circle>>();
+    private final List<DropListener<? extends Circle>> dropListeners = new ArrayList<DropListener<? extends Circle>>();
     private TimingSource ts;
 
     private CircleManager() {
@@ -45,11 +45,11 @@ public class CircleManager implements GhostDropListener {
         return INSTANCE;
     }
 
-    public synchronized void addDropListener(DropListener<Circle> listener) {
+    public synchronized <E extends Circle> void addDropListener(DropListener<E> listener) {
         this.dropListeners.add(listener);
     }
 
-    public synchronized void removeDropListener(DropListener<Circle> listener) {
+    public synchronized <E extends Circle> void removeDropListener(DropListener<E> listener) {
         this.dropListeners.remove(listener);
     }
 

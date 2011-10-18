@@ -35,7 +35,7 @@ class CircleComponentAdapter extends GhostDropAdapter {
         Component c = e.getComponent();
 
         if (!(c instanceof CircleCanvas)) {
-            throw new IllegalStateException("");
+            throw new IllegalStateException("Invalid component");
         }
 
         Point p = (Point) e.getPoint().clone();
@@ -153,6 +153,8 @@ class CircleComponentAdapter extends GhostDropAdapter {
         } else {
             circleCanvas.setToolTipText(null);
         }
+        
+        //glassPane.setVisible(true);
     }
 
     @Override

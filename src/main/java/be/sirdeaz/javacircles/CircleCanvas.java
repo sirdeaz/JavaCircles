@@ -24,6 +24,7 @@ import java.awt.RadialGradientPaint;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
@@ -51,9 +52,7 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     private static final int SMALL_CIRCLE = 35;
     private static final int INNER_CIRCLE = 100;
     private static final int START_ANGLE = 270;
-    
     private static final int CANVAS_WIDTH = 200;
-    
     // properties
     public static final String PROP_FOCUS_RECEIVED = "CIRCLE_CANVAS_FOCUS_RECEIVED";
     public static final String PROP_FOCUS_LOST = "CIRCLE_CANVAS_FOCUS_LOST";
@@ -64,9 +63,11 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     private final String title;
     private int outerCircleRadius;
     private final Font myFont = new Font("verdana", Font.BOLD, 12);
-    
     private InnerCircleLabelGenerator innerCircleLabelGenerator;
     private InnerCircleColorGenerator innerCircleColorGenerator = new DefaultInnerCircleColorGenerator();
+    private boolean collapsible = true;
+    
+    private Stroke myStroke = new BasicStroke(2.0f);
 
     public CircleCanvas(String title, CircleModel model) {
         this(title, model, new DefaultInnerCircleLabelGenerator());
@@ -85,6 +86,14 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(CANVAS_WIDTH, CANVAS_WIDTH);
+    }
+
+    public boolean isCollapsible() {
+        return collapsible;
+    }
+
+    public void setCollapsible(boolean collapsible) {
+        this.collapsible = collapsible;
     }
 
     @Override
@@ -122,13 +131,17 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     public void setInnerCircleColorGenerator(InnerCircleColorGenerator innerCircleColorGenerator) {
         this.innerCircleColorGenerator = innerCircleColorGenerator;
     }
-    
+
     public static int getStartAngle() {
         return START_ANGLE;
     }
 
     public int getOuterCircleRadius() {
-        return outerCircleRadius;
+        if (isCollapsible()) {
+            return outerCircleRadius;
+        } else {
+            return OUTER_CIRCLE + OUTER_CIRCLE_MAX_EXTEND;
+        }
     }
 
     public CircleModel getModel() {
@@ -144,10 +157,10 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     }
 
     public Shape getOuterCircleShape(int delta) {
-        int x = (getWidth() / 2) - outerCircleRadius / 2;
-        int y = (getHeight() / 2) - outerCircleRadius / 2;
-        return new Ellipse2D.Double(x, y, outerCircleRadius - delta,
-                outerCircleRadius - delta);
+        int x = (getWidth() / 2) - getOuterCircleRadius() / 2;
+        int y = (getHeight() / 2) - getOuterCircleRadius() / 2;
+        return new Ellipse2D.Double(x, y, getOuterCircleRadius() - delta,
+                getOuterCircleRadius() - delta);
     }
 
     public Shape getTransformedShape(Circle circle) {
@@ -161,7 +174,8 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
     public Shape getHoveredShape(Point p) {
         List<Circle> circles = model.getCircles();
         for (Circle circle : circles) {
-            if (getTransformedShape(circle).contains(p)) {
+            // added non draggable support!
+            if (getTransformedShape(circle).contains(p) && circle.isDraggable()) {
                 return basicShape;
             }
         }
@@ -210,10 +224,6 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
      */
     @Override
     protected void paintComponent(Graphics g) {
-        // Clear the background to black
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
         // Create a translucent intermediate image in which we can perform
         // the soft clipping
         GraphicsConfiguration gc = ((Graphics2D) g).getDeviceConfiguration();
@@ -248,10 +258,10 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
 
         Point2D center = new Point2D.Float(getWidth() / 2, getWidth() / 2);
         RadialGradientPaint outerGradientPaint = new RadialGradientPaint(
-                center, outerCircleRadius, new float[]{0.0f, 1.0f},
+                center, getOuterCircleRadius(), new float[]{0.0f, 1.0f},
                 new Color[]{Color.darkGray, Color.white});
         g2.setPaint(outerGradientPaint);
-        drawCircle(g2, outerCircleRadius, outerCircleRadius);
+        drawCircle(g2, getOuterCircleRadius(), getOuterCircleRadius());
 
         RadialGradientPaint innerCircleGradient = new RadialGradientPaint(
                 center, INNER_CIRCLE, new float[]{0.0f, 1.0f},
@@ -310,7 +320,7 @@ public class CircleCanvas extends JComponent implements PropertyChangeListener {
 
         g2.fillOval(x, y, width, height);
         g2.setPaint(Color.black);
-        g2.setStroke(new BasicStroke(2.0f));
+        g2.setStroke(myStroke);
         g2.drawOval(x, y, width - 1, height - 1);
     }
 

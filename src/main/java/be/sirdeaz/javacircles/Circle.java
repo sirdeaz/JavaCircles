@@ -15,6 +15,8 @@ public interface Circle {
 
     int getId();
     
+    boolean isDraggable();
+    
     Color getColor();
     Color getOutlineColor();
     
