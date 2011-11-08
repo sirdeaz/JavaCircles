@@ -97,7 +97,7 @@ class CircleComponentAdapter extends GhostDropAdapter {
         CircleCanvas targetCanvas = null;
         if (target != null && target instanceof CircleCanvas) {
             targetCanvas = (CircleCanvas) target;
-            // System.out.println(targetCanvas.getTitle() + " " + i++);
+			
             Point componentPoint = SwingUtilities.convertPoint(
                     getTopParent(this.circleCanvas), dropPoint, targetCanvas);
             if (targetCanvas.isInCircle(componentPoint)) {

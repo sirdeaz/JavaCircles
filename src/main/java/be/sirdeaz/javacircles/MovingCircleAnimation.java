@@ -12,17 +12,19 @@ package be.sirdeaz.javacircles;
  class MovingCircleAnimation implements BasicAnimation {
 
     private final Circle circle;
-    private final int initialDegrees;
-    private final int targetDegrees;
+    private final CirclePosition initialPosition;
+    private final CirclePosition targetPosition;
 
-    public MovingCircleAnimation(Circle circle, int targetDegrees) {
+    public MovingCircleAnimation(Circle circle, CirclePosition position) {
         this.circle = circle;
-        this.initialDegrees = circle.getDegrees();
-        this.targetDegrees = targetDegrees;
+        this.initialPosition = circle.getPosition();
+        this.targetPosition = position;
     }
 
     @Override
     public void doMove(double fraction) {
-        circle.setDegrees(this.initialDegrees - (int)(fraction*(initialDegrees-targetDegrees)));
+		double newDegrees = this.initialPosition.getDegrees() - (fraction*(initialPosition.getDegrees()-targetPosition.getDegrees()));
+		CirclePosition position = new CirclePosition(targetPosition.getLayer(), newDegrees);
+        circle.setPosition(position);
     }
 }

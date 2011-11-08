@@ -19,7 +19,9 @@ class CircleSizeAnimation implements BasicAnimation {
         if (circleCanvas.getOuterCircleRadius() > CircleCanvas.OUTER_CIRCLE) {
             this.radiusDiff = circleCanvas.getOuterCircleRadius() - CircleCanvas.OUTER_CIRCLE;
         } else {
-            this.radiusDiff = CircleCanvas.OUTER_CIRCLE_MAX_EXTEND;
+			//
+            //this.radiusDiff = CircleCanvas.OUTER_CIRCLE_EXTEND;
+			this.radiusDiff = circleCanvas.getExtendedWidth();
         }
     }
 
